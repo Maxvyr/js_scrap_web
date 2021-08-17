@@ -32,6 +32,8 @@ const url = "https://www.kubii.fr/cartes-raspberry-pi/2771-nouveau-raspberry-pi-
     let pricePi4 = priceRecover.substring(0, 2)
     console.log("le prix est de => " + pricePi4);
 
+    
+
     // close
     await browser.close();
 })();
