@@ -35,7 +35,6 @@ const url = "https://www.kubii.fr/cartes-raspberry-pi/2771-nouveau-raspberry-pi-
     let pricePi4 = parseInt(priceRecover.substring(0, 2))
 
     if(pricePi4 < 44) {
-        console.log("Go Go");
         sendNotification(pricePi4);
     }
 
