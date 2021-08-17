@@ -1,4 +1,6 @@
 const puppeteer = require('puppeteer');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const url = "https://www.kubii.fr/cartes-raspberry-pi/2771-nouveau-raspberry-pi-4-modele-b-2gb-0765756931175.html?search_query=Pi4&results=111";
 
@@ -29,11 +31,35 @@ const url = "https://www.kubii.fr/cartes-raspberry-pi/2771-nouveau-raspberry-pi-
     let priceRecover = await page.evaluate(() => {
         return document.querySelector('span[itemprop=price]').innerHTML;
     });
-    let pricePi4 = priceRecover.substring(0, 2)
-    console.log("le prix est de => " + pricePi4);
+    console.log("le prix est de => " + priceRecover);
+    let pricePi4 = parseInt(priceRecover.substring(0, 2))
 
-    
+    if(pricePi4 < 44) {
+        console.log("Go Go");
+        sendNotification(pricePi4);
+    }
 
     // close
     await browser.close();
 })();
+
+
+
+async function sendNotification(price) {
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.MAIL_SEND,
+        pass: process.env.MAIL_PASS,
+      },
+    });
+
+    let info = await transporter
+      .sendMail({
+        from: '"Rasp Pi4" <' + process.env.MAIL_SEND  + '>',
+        to: process.env.MAIL_RECEIVE,
+        subject: "Prix Rasp sous les " + price + "€",
+        html: "Le prix du rasp est de " + price + "€",
+      })
+      .then(() => console.log("Message send"));
+  }
