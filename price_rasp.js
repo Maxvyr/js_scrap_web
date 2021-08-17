@@ -17,13 +17,13 @@ const url = "https://www.kubii.fr/cartes-raspberry-pi/2771-nouveau-raspberry-pi-
 
     // // pdf
     // await page.pdf({
-    //     path : "page.pdf",
+    //     path : "file_create/page.pdf",
     //     format : "A4",
     // });
 
     // //image size image = viewport size
     // await page.screenshot({
-    //     path : "image.png",
+    //     path : "file_create/image.png",
     // });
 
     // recover price specific
