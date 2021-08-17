@@ -7,10 +7,21 @@ const url = "https://www.kubii.fr/";
     const page = await browser.newPage();
     await page.goto(url, {waitUntil: "networkidle2"});
 
+    // size viewport for sreenschot
+    await page.setViewport({
+        width: 1500,
+        height: 2500,
+    });
+
     // pdf
     await page.pdf({
         path : "page.pdf",
         format : "A4",
+    });
+
+    //image size image = viewport size
+    await page.screenshot({
+        path : "image.png",
     });
 
     // close
