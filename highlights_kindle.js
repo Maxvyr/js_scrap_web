@@ -18,17 +18,28 @@ const url = "https://read.amazon.com/notebook?ref_=kcr_notebook_lib&language=en-
     await page.waitForSelector("img[alt=Kindle]");
     // wait number show on page
     // variable
-    let numberHighlights
-    let numberNotes
-    let highlights
+    let linkBookImg;
+    let nameBook;
+    let numberHighlights;
+    let numberNotes;
+    let highlights;
 
     // pdf
     await page.pdf({
-        path : "page.pdf",
+        path : "file_create/page.pdf",
         format : "A4",
     });
 
+    // wait 500ms after logo Kindle appear
     setTimeout(async () => {
+        linkBookImg = await page.evaluate(() => { 
+            return document.querySelector('img[class="kp-notebook-cover-image-border"]').src
+        });
+
+        nameBook = await page.evaluate(() => { 
+            return document.querySelector('h3').innerHTML
+        });
+
         numberHighlights = await page.evaluate(() => { 
             return document.querySelector("#kp-notebook-highlights-count").innerText
         });
@@ -41,7 +52,7 @@ const url = "https://read.amazon.com/notebook?ref_=kcr_notebook_lib&language=en-
             return document.querySelector("#kp-notebook-annotations").innerText
         });
         
-        let txt = "Number of Hightlights =>  " + numberHighlights + "\n" + "Number of Notes =>  " + numberNotes + "\n\n\n" + highlights;
+        let txt = "TITLE =>  " + nameBook + "\n\n" + "IMG BOOK =>  " + linkBookImg + "\n\n" + "Number of Hightlights =>  " + numberHighlights + "\n" + "Number of Notes =>  " + numberNotes + "\n\n\n" + highlights;
         
         fs.writeFile(
             "file_create/kindle_note.txt", txt, (err) => {
