@@ -50,7 +50,9 @@ const url = "https://read.amazon.com/notebook?ref_=kcr_notebook_lib&language=en-
         });    
         
         highlights = await page.evaluate(() => { 
-            return document.querySelector("#kp-notebook-annotations").innerText;
+            let receive = document.querySelector("#kp-notebook-annotations").innerText;
+            let format = receive.replaceAll("Options", "\n").replaceAll("Blue highlight |", "").replaceAll("Yellow highlight |", "");
+            return format;
         });
         
         let txt = "TITLE =>  " + nameBook + "\n\n" + "IMG BOOK =>  " + linkBookImg + "\n\n" + "Number of Hightlights =>  " + numberHighlights + "\n" + "Number of Notes =>  " + numberNotes + "\n\n\n" + highlights;
@@ -62,14 +64,14 @@ const url = "https://read.amazon.com/notebook?ref_=kcr_notebook_lib&language=en-
             }
         );
 
-        sendNotification(nameBook, highlights);
+        sendNotificationKindleHighLights(nameBook);
         
         // close
         await browser.close();
     },500);
 })();
 
-async function sendNotification(bookName, highlights) {
+async function sendNotificationKindleHighLights(bookName) {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -89,5 +91,5 @@ async function sendNotification(bookName, highlights) {
             path: 'file_create/kindle_note.txt',
         }],
       })
-      .then(() => console.log("Message send"));
+      .then(() => console.log("Message send!"));
   }
