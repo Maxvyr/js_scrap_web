@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const url = "https://www.kubii.fr/cartes-raspberry-pi/2771-nouveau-raspberry-pi-4-modele-b-2gb-0765756931175.html?search_query=Pi4&results=111";
+const priceGoal = 44;
 
 (async () => {
     const browser = await puppeteer.launch({headless: true});
@@ -34,7 +35,7 @@ const url = "https://www.kubii.fr/cartes-raspberry-pi/2771-nouveau-raspberry-pi-
     console.log("le prix est de => " + priceRecover);
     let pricePi4 = parseInt(priceRecover.substring(0, 2))
 
-    if(pricePi4 < 44) {
+    if(pricePi4 < priceGoal) {
         sendNotification(pricePi4);
     }
 
@@ -57,8 +58,8 @@ async function sendNotification(price) {
       .sendMail({
         from: '"Rasp Pi4" <' + process.env.MAIL_SEND  + '>',
         to: process.env.MAIL_RECEIVE,
-        subject: "Prix Rasp sous les " + price + "€",
-        html: "Le prix du rasp est de " + price + "€",
+        subject: "Prix Rasp sous les " + priceGoal + "€",
+        html: "Le prix du rasp est de <b>" + price + "€ </b><br><br>" + "Link => " + url,
       })
       .then(() => console.log("Message send"));
   }
