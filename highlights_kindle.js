@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const nodemailer = require('nodemailer');
 const fs = require('fs');
 require('dotenv').config();
 
@@ -37,19 +38,19 @@ const url = "https://read.amazon.com/notebook?ref_=kcr_notebook_lib&language=en-
         });
 
         nameBook = await page.evaluate(() => { 
-            return document.querySelector('h3').innerHTML
+            return document.querySelector('h3').innerHTML;
         });
 
         numberHighlights = await page.evaluate(() => { 
-            return document.querySelector("#kp-notebook-highlights-count").innerText
+            return document.querySelector("#kp-notebook-highlights-count").innerText;
         });
         
         numberNotes = await page.evaluate(() => { 
-            return document.querySelector("#kp-notebook-notes-count").innerText
+            return document.querySelector("#kp-notebook-notes-count").innerText;
         });    
         
         highlights = await page.evaluate(() => { 
-            return document.querySelector("#kp-notebook-annotations").innerText
+            return document.querySelector("#kp-notebook-annotations").innerText;
         });
         
         let txt = "TITLE =>  " + nameBook + "\n\n" + "IMG BOOK =>  " + linkBookImg + "\n\n" + "Number of Hightlights =>  " + numberHighlights + "\n" + "Number of Notes =>  " + numberNotes + "\n\n\n" + highlights;
@@ -60,8 +61,33 @@ const url = "https://read.amazon.com/notebook?ref_=kcr_notebook_lib&language=en-
                 console.log("File Saved!");
             }
         );
+
+        sendNotification(nameBook, highlights);
         
         // close
         await browser.close();
     },500);
 })();
+
+async function sendNotification(bookName, highlights) {
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.MAIL_SEND,
+        pass: process.env.MAIL_PASS,
+      },
+    });
+  
+    let info = await transporter
+      .sendMail({
+        from: 'HighLights - ' + bookName + ' <' + process.env.MAIL_SEND  + '>',
+        to: process.env.MAIL_RECEIVE,
+        subject: 'HighLights - Kindle',
+        html: '<h1>' + bookName + '</h1>',
+        attachments : [{
+            filename : bookName + '.txt',
+            path: 'file_create/kindle_note.txt',
+        }],
+      })
+      .then(() => console.log("Message send"));
+  }
