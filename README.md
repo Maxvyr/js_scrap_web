@@ -1,4 +1,4 @@
-# COMING SOON
+# JS Scraping 
 
 <a href="https://gitmoji.dev">
   <img src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square" alt="Gitmoji">
@@ -12,4 +12,4 @@
 
 ## Contact Me
 
-contact : [pandamydev@gmail.com](mailto:pandamydev@gmail.com)
+contact : [contact@vidakei.com](contact@vidakei.com)
